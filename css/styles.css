@@ -23,11 +23,14 @@
   --box-shadow: 0 1px 2px 0 rgba(255, 84, 0, 0.2), 0 1px 3px 1px rgba(255, 84, 0, 0.1);
 }
 
-/* Reset básico */
-*, *::before, *::after {
+/* Prefixos e compatibilidade */
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -37,10 +40,9 @@ body {
   color: var(--color-text);
   overflow-x: hidden;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
   line-height: 1.6;
   font-size: var(--font-size-base);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 h1 {
@@ -1793,5 +1795,33 @@ footer {
     height: calc(100vh - 90px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Melhorias para Firefox */
+@-moz-document url-prefix() {
+  .services-grid {
+    display: -moz-grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* Melhorias para Safari */
+@supports (-webkit-touch-callout: none) {
+  .hero {
+    background-attachment: scroll;
+  }
+  
+  .btn, .btn-cookie {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+/* Melhorias para Edge/IE */
+@supports (-ms-ime-align: auto) {
+  .services-grid {
+    display: -ms-grid;
+    -ms-grid-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 }

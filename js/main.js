@@ -17,10 +17,27 @@ function validateCSRFToken(token) {
     return token === localStorage.getItem('csrfToken');
 }
 
-// Função para verificar se os cookies já foram aceitos
-function checkCookieConsent() {
-    return localStorage.getItem('cookieConsent');
-}
+// Verificar suporte a recursos modernos
+const supportsLocalStorage = (function() {
+  try {
+    localStorage.setItem('test', 'test');
+    localStorage.removeItem('test');
+    return true;
+  } catch(e) {
+    return false;
+  }
+})();
+
+const supportsIntersectionObserver = 'IntersectionObserver' in window;
+const supportsWebGL = (function() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && 
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+  } catch(e) {
+    return false;
+  }
+})();
 
 // Função para mostrar o banner de cookies
 function showCookieBanner() {
@@ -35,12 +52,20 @@ function showCookieBanner() {
 
 // Função para salvar a escolha do usuário de forma segura
 function saveCookieChoice(choice) {
-  try {
-    localStorage.setItem('cookieConsent', choice);
+  if (supportsLocalStorage) {
+    try {
+      localStorage.setItem('cookieConsent', choice);
+      return true;
+    } catch (e) {
+      console.error('Erro ao salvar preferência de cookies:', e);
+      // Fallback para cookies
+      document.cookie = `cookieConsent=${choice};max-age=31536000;path=/`;
+      return true;
+    }
+  } else {
+    // Fallback para cookies
+    document.cookie = `cookieConsent=${choice};max-age=31536000;path=/`;
     return true;
-  } catch (e) {
-    console.error('Erro ao salvar preferência de cookies:', e);
-    return false;
   }
 }
 
@@ -191,33 +216,23 @@ const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('nav');
 
 if (menuToggle && navMenu) {
-  // Prevenir comportamento padrão do toque no iOS
-  menuToggle.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-  }, { passive: false });
-
-  const toggleMenu = (e) => {
-    e.preventDefault();
-    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
-    menuToggle.setAttribute('aria-expanded', !expanded);
-    navMenu.classList.toggle('open');
+  // Detectar tipo de dispositivo
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  
+  if (isTouchDevice) {
+    // Configuração para dispositivos touch
+    menuToggle.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+    }, { passive: false });
     
-    // Prevenir scroll do body quando menu está aberto
-    document.body.style.overflow = !expanded ? 'hidden' : '';
-    
-    // Atualizar posição do menu baseado no scroll
-    if (!expanded) {
-      const headerHeight = document.querySelector('header').offsetHeight;
-      navMenu.style.top = `${headerHeight}px`;
-    }
-  };
-
-  // Adicionar eventos para clique e toque
-  menuToggle.addEventListener('click', toggleMenu);
-  menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
-
-  // Fechar menu ao clicar fora
-  document.addEventListener('click', (e) => {
+    menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
+  } else {
+    // Configuração para dispositivos não-touch
+    menuToggle.addEventListener('click', toggleMenu);
+  }
+  
+  // Fechar menu ao clicar fora (com suporte a touch)
+  document.addEventListener(isTouchDevice ? 'touchend' : 'click', (e) => {
     if (navMenu.classList.contains('open') && 
         !navMenu.contains(e.target) && 
         !menuToggle.contains(e.target)) {
@@ -225,7 +240,7 @@ if (menuToggle && navMenu) {
       navMenu.classList.remove('open');
       document.body.style.overflow = '';
     }
-  });
+  }, { passive: true });
 
   // Fechar menu ao redimensionar a tela
   window.addEventListener('resize', () => {
@@ -237,20 +252,40 @@ if (menuToggle && navMenu) {
   });
 }
 
-// Animação de scroll reveal
-const fadeSections = document.querySelectorAll('.fade-section');
-
+// Animação de scroll reveal com fallback
 const revealOnScroll = () => {
-  const windowBottom = window.innerHeight + window.scrollY;
-  fadeSections.forEach(section => {
-    if (windowBottom > section.offsetTop + 100) {
-      section.classList.add('visible');
-    }
-  });
-};
+  if (supportsIntersectionObserver) {
+    // Usar IntersectionObserver
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    });
 
-window.addEventListener('scroll', revealOnScroll);
-window.addEventListener('load', revealOnScroll);
+    document.querySelectorAll('.fade-section').forEach(section => {
+      observer.observe(section);
+    });
+  } else {
+    // Fallback para scroll event
+    const checkScroll = () => {
+      const windowBottom = window.innerHeight + window.scrollY;
+      document.querySelectorAll('.fade-section:not(.visible)').forEach(section => {
+        if (windowBottom > section.offsetTop + 100) {
+          section.classList.add('visible');
+        }
+      });
+    };
+    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
+    checkScroll();
+  }
+};
 
 // Smooth scroll para links internos
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -378,4 +413,15 @@ window.addEventListener('load', function() {
     if (!fontAwesome || !fontAwesome.sheet) {
         handleFontAwesomeError();
     }
-}); 
+});
+
+// Verificar se os cookies já foram aceitos
+function checkCookieConsent() {
+  if (supportsLocalStorage) {
+    const stored = localStorage.getItem('cookieConsent');
+    if (stored) return stored;
+  }
+  // Fallback para cookies
+  const match = document.cookie.match(/cookieConsent=([^;]+)/);
+  return match ? match[1] : null;
+} 
