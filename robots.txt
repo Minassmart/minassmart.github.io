@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Sitemap: https://minassmart.github.io/sitemap.xml
+
+# Permitir indexação de conteúdo importante
+Allow: /index.html
+Allow: /tour-virtual.html
+Allow: /cena-externa.html
+
+# Evitar indexação de arquivos desnecessários
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /assets/textures/
+Disallow: /assets/thumbnails/ 
