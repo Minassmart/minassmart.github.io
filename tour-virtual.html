@@ -2,11 +2,51 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
   <title>Tour Virtual - Minas Smart</title>
+  
+  <!-- Preload de recursos críticos -->
+  <link rel="preload" href="css/tour.css" as="style">
+  <link rel="preload" href="js/tour.js" as="script">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" as="script">
+  
+  <!-- Estilos -->
   <link rel="stylesheet" href="css/tour.css">
+  
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  
+  <!-- Polyfills para Safari -->
+  <script>
+    if (!window.Promise) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>');
+    }
+    if (!window.fetch) {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"><\/script>');
+    }
+  </script>
+  
+  <!-- Fallback para navegadores sem JavaScript -->
+  <noscript>
+    <style>
+      .fallback-message {
+        display: block !important;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </noscript>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
@@ -676,5 +716,12 @@
       initTour();
     });
   </script>
+
+  <!-- Mensagem de fallback para JavaScript desativado -->
+  <div class="fallback-message" style="display: none;">
+    <h2>JavaScript Necessário</h2>
+    <p>Por favor, ative o JavaScript para visualizar o tour virtual.</p>
+    <a href="index.html" class="btn">Voltar ao Site</a>
+  </div>
 </body>
 </html> 

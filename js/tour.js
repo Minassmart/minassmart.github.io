@@ -160,7 +160,7 @@ const interactivePoints = {
 };
 
 // Função para verificar suporte WebGL
-function checkWebGLSupport() {
+const checkWebGLSupport = () => {
   try {
     const canvas = document.createElement('canvas');
     return !!(window.WebGLRenderingContext && 
@@ -168,7 +168,7 @@ function checkWebGLSupport() {
   } catch(e) {
     return false;
   }
-}
+};
 
 // Verificar se o Three.js está carregado
 function waitForDependencies() {
@@ -209,155 +209,319 @@ function waitForDependencies() {
   });
 }
 
-// Inicialização do tour
-document.addEventListener('DOMContentLoaded', async function() {
-  try {
-    // Inicializar canvas
-    canvas = document.getElementById('roomCanvas');
-    if (!canvas) {
-      throw new Error('Canvas não encontrado');
-    }
-    
-    // Ajustar tamanho do canvas
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    ctx = canvas.getContext('2d');
-    
-    if (!ctx) {
-      throw new Error('Contexto 2D não suportado');
-    }
-
-    // Verificar suporte a WebGL
-    if (!checkWebGLSupport()) {
-      throw new Error('Seu navegador não suporta WebGL');
-    }
-
-    // Verificar dependências
-    await waitForDependencies();
-
-    // Iniciar o tour
-    await init();
-    
-    // Adicionar listener para o botão de início
-    const startButton = document.getElementById('startTour');
-    if (startButton) {
-      startButton.addEventListener('click', function() {
-        const overlay = document.getElementById('tourOverlay');
-        if (overlay) {
-          overlay.classList.add('hidden');
-          // Iniciar renderização após fechar overlay
-          drawRoom();
-          animate();
-        }
-      });
-    }
-
-  } catch (error) {
-    console.error('Erro ao inicializar o tour:', error);
-    const errorElement = document.getElementById('tourError');
-    if (errorElement) {
-      errorElement.style.display = 'block';
-    }
-    const overlay = document.getElementById('tourOverlay');
-    if (overlay) {
-      overlay.style.display = 'none';
-    }
-  }
-});
-
-async function init() {
-  try {
-    console.log('Iniciando configuração do Three.js');
-
-    // Verificar suporte WebGL
-    if (!checkWebGLSupport()) {
-      throw new Error('WebGL não é suportado neste navegador.');
-    }
-    console.log('Suporte WebGL verificado com sucesso');
-
-    // Configuração básica
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf8f9fa);
-    console.log('Cena criada');
-
-    // Câmera
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 1.6, 4);
-    console.log('Câmera configurada');
-
-    // Renderer
-    renderer = new THREE.WebGLRenderer({ 
-      antialias: true,
-      powerPreference: "high-performance"
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    console.log('Renderer criado');
-
-    const container = document.getElementById('tour3D');
-    if (!container) {
-      throw new Error('Elemento tour3D não encontrado');
-    }
-    container.appendChild(renderer.domElement);
-    console.log('Renderer adicionado ao container');
-
-    // Controles
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 2;
-    controls.maxDistance = 8;
-    controls.maxPolarAngle = Math.PI / 2;
-    controls.target.set(0, 1, 0);
-    console.log('Controles configurados');
-
-    // Luz ambiente inicial
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
-    console.log('Luz ambiente adicionada');
-
-    // Criar ambiente inicial
-    createRoom('sala');
-    console.log('Ambiente inicial criado');
-
-    // Adicionar pontos interativos
-    addInteractivePoints();
-    console.log('Pontos interativos adicionados');
-
-    // Configurar eventos
-    setupEventListeners();
-    console.log('Eventos configurados');
-
-    // Configurar post-processing
-    setupPostProcessing();
-    console.log('Post-processing configurado');
-
-    // Iniciar animação
-    animate();
-    console.log('Animação iniciada');
-
-    console.log('Three.js configurado com sucesso');
-
-    // Configurar canvas
-    interactionPoints.innerHTML = '';
-    infoCard.innerHTML = `
-        <h3>Explore o Ambiente</h3>
-        <p>Passe o mouse sobre os pontos para descobrir as funcionalidades.</p>
+// Gerenciador de carregamento
+class LoadingManager {
+  constructor() {
+    this.loadingScreen = document.createElement('div');
+    this.loadingScreen.className = 'loading-screen';
+    this.loadingScreen.innerHTML = `
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <p>Carregando tour virtual...</p>
+      </div>
     `;
-    infoCard.style.opacity = '0.8';
+    document.body.appendChild(this.loadingScreen);
+  }
 
-    // Carregar imagens
-    loadRoomImages();
-
-  } catch (error) {
-    console.error('Erro na inicialização:', error);
-    showErrorMessage(error.message);
-    throw error;
+  hide() {
+    this.loadingScreen.style.opacity = '0';
+    setTimeout(() => {
+      this.loadingScreen.remove();
+    }, 500);
   }
 }
+
+// Classe principal do Tour
+class VirtualTour {
+  constructor() {
+    this.container = document.getElementById('tour3D');
+    this.loadingManager = new LoadingManager();
+    this.scene = null;
+    this.camera = null;
+    this.renderer = null;
+    this.controls = null;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.isTouching = false;
+    
+    this.init();
+  }
+
+  init() {
+    if (!checkWebGLSupport()) {
+      alert('Seu navegador não suporta WebGL. Por favor, use um navegador mais recente.');
+      return;
+    }
+
+    // Configuração da cena
+    this.scene = new THREE.Scene();
+    
+    // Configuração da câmera
+    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera.position.set(0, 0, 0.1);
+
+    // Configuração do renderer com antialiasing para Safari
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance"
+    });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.container.appendChild(this.renderer.domElement);
+
+    // Configuração dos controles
+    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableZoom = false;
+    this.controls.enablePan = false;
+    this.controls.rotateSpeed = -0.5;
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.1;
+
+    // Eventos
+    this.setupEventListeners();
+    
+    // Carregar a cena inicial
+    this.loadRoom('sala');
+    
+    // Iniciar animação
+    this.animate();
+  }
+
+  setupEventListeners() {
+    // Redimensionamento
+    window.addEventListener('resize', this.onWindowResize.bind(this), false);
+    
+    // Eventos de toque com opções passivas
+    this.container.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: false });
+    this.container.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: false });
+    this.container.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: true });
+    
+    // Eventos de mouse
+    this.container.addEventListener('click', this.onClick.bind(this), { passive: true });
+    
+    // Orientação do dispositivo com permissão
+    if (typeof DeviceOrientationEvent !== 'undefined' && 
+        typeof DeviceOrientationEvent.requestPermission === 'function') {
+      // iOS 13+ requer permissão
+      document.getElementById('startTour').addEventListener('click', async () => {
+        try {
+          const permission = await DeviceOrientationEvent.requestPermission();
+          if (permission === 'granted') {
+            window.addEventListener('deviceorientation', this.onDeviceOrientation.bind(this), true);
+          }
+        } catch (error) {
+          console.warn('Permissão de orientação negada:', error);
+        }
+      });
+    } else {
+      // Outros dispositivos
+      window.addEventListener('deviceorientation', this.onDeviceOrientation.bind(this), true);
+    }
+  }
+
+  onWindowResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  onTouchStart(event) {
+    if (event.touches.length === 1) {
+      event.preventDefault();
+      const touch = event.touches[0];
+      this.touchStartX = touch.clientX;
+      this.touchStartY = touch.clientY;
+      this.isTouching = true;
+      
+      // Armazenar posição inicial da câmera
+      this.touchStartCameraRotation = {
+        x: this.camera.rotation.x,
+        y: this.camera.rotation.y
+      };
+    }
+  }
+
+  onTouchMove(event) {
+    if (!this.isTouching || event.touches.length !== 1) return;
+    
+    event.preventDefault();
+    const touch = event.touches[0];
+    const deltaX = (touch.clientX - this.touchStartX) * 0.005;
+    const deltaY = (touch.clientY - this.touchStartY) * 0.005;
+    
+    // Aplicar rotação suave
+    this.camera.rotation.y = this.touchStartCameraRotation.y - deltaX;
+    this.camera.rotation.x = Math.max(
+      -Math.PI / 2,
+      Math.min(Math.PI / 2, this.touchStartCameraRotation.x - deltaY)
+    );
+  }
+
+  onTouchEnd() {
+    this.isTouching = false;
+  }
+
+  onClick(event) {
+    event.preventDefault();
+    
+    const rect = this.container.getBoundingClientRect();
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+    
+    if (intersects.length > 0) {
+      const object = intersects[0].object;
+      if (object.userData.type === 'hotspot') {
+        this.handleHotspotClick(object);
+      }
+    }
+  }
+
+  onDeviceOrientation(event) {
+    if (!event.alpha || !event.beta || !event.gamma) return;
+    
+    const x = THREE.MathUtils.degToRad(event.beta);
+    const y = THREE.MathUtils.degToRad(event.gamma);
+    const z = THREE.MathUtils.degToRad(event.alpha);
+    
+    this.camera.rotation.set(x, y, z);
+  }
+
+  loadRoom(roomName) {
+    // Limpar cena atual
+    while(this.scene.children.length > 0) { 
+      this.scene.remove(this.scene.children[0]); 
+    }
+
+    // Carregar nova textura
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+      `assets/rooms/${roomName}.jpg`,
+      (texture) => {
+        const geometry = new THREE.SphereGeometry(500, 60, 40);
+        geometry.scale(-1, 1, 1);
+        
+        const material = new THREE.MeshBasicMaterial({
+          map: texture,
+          side: THREE.DoubleSide
+        });
+        
+        const sphere = new THREE.Mesh(geometry, material);
+        this.scene.add(sphere);
+        
+        // Adicionar hotspots
+        this.addHotspots(roomName);
+        
+        // Esconder tela de carregamento
+        this.loadingManager.hide();
+      },
+      undefined,
+      (error) => {
+        console.error('Erro ao carregar textura:', error);
+        alert('Erro ao carregar o ambiente. Por favor, tente novamente.');
+      }
+    );
+  }
+
+  addHotspots(roomName) {
+    const hotspots = this.getHotspotsForRoom(roomName);
+    hotspots.forEach(hotspot => {
+      const sprite = this.createHotspotSprite();
+      sprite.position.set(hotspot.position.x, hotspot.position.y, hotspot.position.z);
+      sprite.userData = {
+        type: 'hotspot',
+        action: hotspot.action,
+        target: hotspot.target
+      };
+      this.scene.add(sprite);
+    });
+  }
+
+  createHotspotSprite() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const context = canvas.getContext('2d');
+    
+    context.beginPath();
+    context.arc(32, 32, 30, 0, Math.PI * 2);
+    context.fillStyle = '#ff5400';
+    context.fill();
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.SpriteMaterial({ map: texture });
+    return new THREE.Sprite(material);
+  }
+
+  getHotspotsForRoom(roomName) {
+    // Definir posições dos hotspots para cada ambiente
+    const hotspotsByRoom = {
+      sala: [
+        {
+          position: { x: 10, y: 0, z: 0 },
+          action: 'changeRoom',
+          target: 'cozinha'
+        }
+        // Adicionar mais hotspots conforme necessário
+      ],
+      cozinha: [
+        {
+          position: { x: -10, y: 0, z: 0 },
+          action: 'changeRoom',
+          target: 'sala'
+        }
+        // Adicionar mais hotspots conforme necessário
+      ]
+    };
+    
+    return hotspotsByRoom[roomName] || [];
+  }
+
+  handleHotspotClick(hotspot) {
+    if (hotspot.userData.action === 'changeRoom') {
+      this.loadRoom(hotspot.userData.target);
+    }
+  }
+
+  animate() {
+    requestAnimationFrame(this.animate.bind(this));
+    
+    if (this.controls) {
+      this.controls.update();
+    }
+    
+    this.renderer.render(this.scene, this.camera);
+  }
+}
+
+// Inicializar o tour quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+  const tour = new VirtualTour();
+  
+  // Adicionar controles de interface
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+  controls.innerHTML = `
+    <button class="control-btn" id="btnLights">Luzes</button>
+    <button class="control-btn" id="btnCurtains">Cortinas</button>
+    <button class="control-btn" id="btnTV">TV</button>
+  `;
+  document.body.appendChild(controls);
+  
+  // Adicionar botão de voltar
+  const backButton = document.createElement('button');
+  backButton.className = 'back-button';
+  backButton.textContent = 'Voltar ao Site';
+  backButton.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+  document.body.appendChild(backButton);
+});
 
 function setupPostProcessing() {
   composer = new THREE.EffectComposer(renderer);
