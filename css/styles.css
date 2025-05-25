@@ -138,13 +138,22 @@ nav a::after {
   border: none;
   padding: 0;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 1000;
 }
 
 .menu-toggle span {
+  display: block;
+  width: 100%;
   background: var(--color-text);
   height: 3px;
   border-radius: 2px;
   transition: all var(--transition-time) ease;
+  -webkit-transform-origin: center;
+  transform-origin: center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .menu-toggle[aria-expanded="true"] span:nth-child(1) {
@@ -895,14 +904,26 @@ footer {
   nav.open {
     display: flex;
     flex-direction: column;
-    position: absolute;
-    top: 100%;
+    position: fixed;
+    top: 90px;
+    left: 0;
     right: 0;
     background: var(--color-bg);
     width: 100%;
     padding: 20px;
     box-shadow: var(--box-shadow);
     border-top: 2px solid var(--color-highlight);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+  }
+  
+  nav.open a {
+    padding: 15px;
+    font-size: var(--font-size-lg);
+    width: 100%;
+    text-align: center;
+    border-radius: 12px;
   }
   
   .menu-toggle {
@@ -1033,19 +1054,35 @@ footer {
   .services-grid {
     grid-template-columns: 1fr;
     max-width: 500px;
-    margin: 40px auto;
+    margin: 20px auto;
+    padding: 0 15px;
   }
 
   .service-image {
-    height: 280px;
+    height: 250px;
+  }
+
+  .service-content {
+    padding: 24px;
+  }
+
+  .service-content h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .service-content p {
+    font-size: var(--font-size-base);
+    margin-bottom: 16px;
+  }
+
+  .service-content li {
+    font-size: var(--font-size-sm);
+    padding: 6px 0;
+    padding-left: 24px;
   }
 
   .contact-container {
     padding: 20px;
-  }
-
-  form {
-    padding: 30px 20px;
   }
 
   h1 {
@@ -1065,6 +1102,41 @@ footer {
   }
 }
 
+@media (max-width: 480px) {
+  .services-grid {
+    margin: 15px auto;
+    padding: 0 10px;
+  }
+
+  .service-card {
+    border-radius: 20px;
+  }
+
+  .service-image {
+    height: 200px;
+  }
+
+  .service-content {
+    padding: 20px;
+  }
+
+  .service-content h3 {
+    font-size: var(--font-size-base);
+    margin-bottom: 12px;
+  }
+
+  .service-content p {
+    font-size: var(--font-size-sm);
+    margin-bottom: 12px;
+  }
+
+  .service-content li {
+    font-size: var(--font-size-xs);
+    padding: 4px 0;
+    padding-left: 20px;
+  }
+}
+
 .cookie-banner {
   position: fixed;
   bottom: 0;
@@ -1075,12 +1147,14 @@ footer {
   padding: 20px;
   z-index: 9999;
   display: none;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .cookie-banner.show {
   display: block;
+  -webkit-animation: slideUp 0.5s ease-out;
   animation: slideUp 0.5s ease-out;
 }
 
@@ -1112,6 +1186,9 @@ footer {
 }
 
 .btn-cookie {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   padding: 10px 25px;
   border-radius: var(--btn-radius);
   font-weight: 600;
@@ -1119,6 +1196,15 @@ footer {
   transition: all var(--transition-time) ease;
   font-size: var(--font-size-sm);
   text-transform: uppercase;
+  border: none;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 120px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-cookie.accept {
@@ -1143,6 +1229,17 @@ footer {
   transform: translateY(-2px);
 }
 
+@-webkit-keyframes slideUp {
+  from {
+    -webkit-transform: translateY(100%);
+    transform: translateY(100%);
+  }
+  to {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(100%);
@@ -1161,6 +1258,12 @@ footer {
   .cookie-buttons {
     width: 100%;
     justify-content: center;
+    flex-direction: column;
+  }
+
+  .btn-cookie {
+    width: 100%;
+    margin: 5px 0;
   }
 }
 
@@ -1676,5 +1779,19 @@ footer {
     width: 50px;
     height: 50px;
     font-size: 1.8em;
+  }
+}
+
+/* Ajustes específicos para iOS */
+@supports (-webkit-touch-callout: none) {
+  .menu-toggle {
+    margin-right: env(safe-area-inset-right);
+  }
+  
+  nav.open {
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

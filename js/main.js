@@ -25,23 +25,69 @@ function checkCookieConsent() {
 // Função para mostrar o banner de cookies
 function showCookieBanner() {
   const banner = document.getElementById('cookie-banner');
+  if (!banner) return;
+
   if (!checkCookieConsent()) {
     banner.classList.add('show');
+    setupCookieButtons();
   }
 }
 
 // Função para salvar a escolha do usuário de forma segura
 function saveCookieChoice(choice) {
-    if (typeof choice !== 'string' || !['accept', 'reject'].includes(choice)) {
-        console.error('Escolha de cookie inválida');
-        return;
-    }
+  try {
     localStorage.setItem('cookieConsent', choice);
-    const banner = document.getElementById('cookie-banner');
-    if (banner) {
-        banner.classList.remove('show');
-    }
+    return true;
+  } catch (e) {
+    console.error('Erro ao salvar preferência de cookies:', e);
+    return false;
+  }
 }
+
+// Função para configurar os botões de cookies
+function setupCookieButtons() {
+  const acceptBtn = document.getElementById('accept-cookies');
+  const rejectBtn = document.getElementById('reject-cookies');
+  const banner = document.getElementById('cookie-banner');
+
+  if (!acceptBtn || !rejectBtn || !banner) return;
+
+  const handleButtonClick = (choice) => {
+    if (saveCookieChoice(choice)) {
+      banner.classList.remove('show');
+      setTimeout(() => {
+        banner.style.display = 'none';
+      }, 500);
+    }
+  };
+
+  // Usando addEventListener em vez de onclick para melhor compatibilidade
+  acceptBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleButtonClick('accept');
+  }, false);
+
+  rejectBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    handleButtonClick('reject');
+  }, false);
+
+  // Adicionar eventos de toque para dispositivos móveis
+  acceptBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    handleButtonClick('accept');
+  }, false);
+
+  rejectBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    handleButtonClick('reject');
+  }, false);
+}
+
+// Inicializar o banner de cookies quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', () => {
+  showCookieBanner();
+});
 
 // Adicionar event listeners aos botões
 document.addEventListener('DOMContentLoaded', function() {
@@ -144,11 +190,52 @@ document.addEventListener('DOMContentLoaded', function() {
 const menuToggle = document.querySelector('.menu-toggle');
 const navMenu = document.querySelector('nav');
 
-menuToggle.addEventListener('click', () => {
-  const expanded = menuToggle.getAttribute('aria-expanded') === 'true' || false;
-  menuToggle.setAttribute('aria-expanded', !expanded);
-  navMenu.classList.toggle('open');
-});
+if (menuToggle && navMenu) {
+  // Prevenir comportamento padrão do toque no iOS
+  menuToggle.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+  }, { passive: false });
+
+  const toggleMenu = (e) => {
+    e.preventDefault();
+    const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+    menuToggle.setAttribute('aria-expanded', !expanded);
+    navMenu.classList.toggle('open');
+    
+    // Prevenir scroll do body quando menu está aberto
+    document.body.style.overflow = !expanded ? 'hidden' : '';
+    
+    // Atualizar posição do menu baseado no scroll
+    if (!expanded) {
+      const headerHeight = document.querySelector('header').offsetHeight;
+      navMenu.style.top = `${headerHeight}px`;
+    }
+  };
+
+  // Adicionar eventos para clique e toque
+  menuToggle.addEventListener('click', toggleMenu);
+  menuToggle.addEventListener('touchend', toggleMenu, { passive: false });
+
+  // Fechar menu ao clicar fora
+  document.addEventListener('click', (e) => {
+    if (navMenu.classList.contains('open') && 
+        !navMenu.contains(e.target) && 
+        !menuToggle.contains(e.target)) {
+      menuToggle.setAttribute('aria-expanded', 'false');
+      navMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Fechar menu ao redimensionar a tela
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 860) {
+      menuToggle.setAttribute('aria-expanded', 'false');
+      navMenu.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  });
+}
 
 // Animação de scroll reveal
 const fadeSections = document.querySelectorAll('.fade-section');
