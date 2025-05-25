@@ -1938,3 +1938,103 @@ img.loaded {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
+
+/* Estilos para inputs com máscara */
+input[type="tel"],
+input[data-mask="phone"] {
+    transition: all 0.3s ease;
+    border: 2px solid #eee;
+}
+
+input[type="tel"]:focus,
+input[data-mask="phone"]:focus {
+    border-color: var(--color-highlight);
+    box-shadow: 0 0 0 3px rgba(255, 84, 0, 0.1);
+}
+
+input[type="tel"].valid,
+input[data-mask="phone"].valid {
+    border-color: #4CAF50;
+    background-color: rgba(76, 175, 80, 0.05);
+}
+
+input[type="tel"].invalid,
+input[data-mask="phone"].invalid {
+    border-color: #f44336;
+    background-color: rgba(244, 67, 54, 0.05);
+}
+
+/* Feedback visual */
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input-wrapper input.valid + .input-wrapper::after {
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+}
+
+.input-wrapper input.invalid + .input-wrapper::after {
+    opacity: 1;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f44336'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z'/%3E%3C/svg%3E");
+}
+
+/* Mensagens de erro */
+.input-wrapper .error-message {
+    display: none;
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    color: #f44336;
+    font-size: var(--font-size-xs);
+    transition: all 0.3s ease;
+}
+
+.input-wrapper input:invalid + .error-message {
+    display: block;
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    input[type="tel"],
+    input[data-mask="phone"],
+    .input-wrapper::after,
+    .error-message {
+        transition: none;
+    }
+}
+
+/* High Contrast */
+@media (prefers-contrast: high) {
+    input[type="tel"].valid,
+    input[data-mask="phone"].valid {
+        border-color: #000;
+        background-color: #fff;
+    }
+
+    input[type="tel"].invalid,
+    input[data-mask="phone"].invalid {
+        border-color: #000;
+        background-color: #fff;
+    }
+
+    .error-message {
+        color: #000;
+        text-decoration: underline;
+    }
+}
