@@ -86,10 +86,8 @@ a {
   transition: all var(--transition-time) ease;
 }
 
-a:hover,
-a:focus {
+a:hover {
   color: var(--color-highlight);
-  outline: none;
 }
 
 /* Header */
@@ -287,15 +285,17 @@ nav.open a {
   padding: 100px 40px;
   position: relative;
   z-index: 3;
-  background-color: var(--color-bg);
+  background-color: var(--color-dark-bg);
 }
 
 .section-dark {
   background-color: var(--color-dark-bg);
+  color: var(--color-text);
 }
 
 .section-light {
   background-color: var(--color-bg);
+  color: var(--color-text);
 }
 
 .section {
@@ -521,7 +521,6 @@ nav.open a {
 .plan.featured {
   background: linear-gradient(to bottom right, #fff, #fff8f5);
   border: 2px solid var(--color-highlight);
-  transform: scale(1.02);
 }
 
 .plan-header {
@@ -590,7 +589,7 @@ nav.open a {
 }
 
 .feature-item:hover {
-  background: rgba(255, 84, 0, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .feature-item i {
@@ -790,6 +789,7 @@ input, textarea, select {
   font-size: var(--font-size-base);
   transition: all var(--transition-time) ease;
   background-color: #fff;
+  color: var(--color-text);
 }
 
 input:focus, textarea:focus, select:focus {
@@ -843,10 +843,11 @@ button[type="submit"]:hover {
 
 /* Footer */
 footer {
-  background: var(--color-secondary);
+  background-color: var(--color-secondary);
   color: #fff;
   padding: 40px 20px;
   text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-content {
@@ -1161,7 +1162,7 @@ footer {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(33, 33, 33, 0.95);
+  background: var(--color-secondary);
   color: #fff;
   padding: 20px;
   z-index: 9999;
@@ -1169,6 +1170,7 @@ footer {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cookie-banner.show {
@@ -1353,13 +1355,13 @@ footer {
 .about-icon {
   width: 70px;
   height: 70px;
-  background: linear-gradient(135deg, var(--color-highlight), var(--color-highlight-light));
+  background: rgba(255, 84, 0, 0.1);
   border-radius: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 25px;
-  color: white;
+  color: var(--color-highlight);
   font-size: 28px;
   box-shadow: 0 10px 20px rgba(255, 84, 0, 0.2);
   transform: rotate(-5deg);
@@ -1513,7 +1515,7 @@ footer {
 
 .faq-item {
   background: var(--color-bg);
-  border: 1px solid #000;
+  border: 1px solid var(--color-dark-bg-alt);
   border-radius: var(--btn-radius);
   overflow: hidden;
   transition: all var(--transition-time) ease;
@@ -1861,4 +1863,78 @@ footer {
 @keyframes fadeIn {
   from { opacity: 0; transform: translate(-50%, -60%); }
   to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+/* Acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-color: #0D47A1;
+    --text-light: #FFFFFF;
+    --bg-dark: #000000;
+    --bg-darker: #000000;
+  }
+}
+
+/* Loading System */
+#loader-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid var(--color-dark-bg);
+    border-top: 3px solid var(--color-highlight);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Lazy Loading */
+img[data-src] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+img.loaded {
+    opacity: 1;
+}
+
+/* Skeleton Loading */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }

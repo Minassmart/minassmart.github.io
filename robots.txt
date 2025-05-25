@@ -1,6 +1,60 @@
 User-agent: *
 Allow: /
-Sitemap: https://minassmart.github.io/sitemap.xml
+Allow: /sitemap.xml
+
+# Diretórios e arquivos para não indexar
+Disallow: /admin/
+Disallow: /api/
+Disallow: /includes/
+Disallow: /cgi-bin/
+Disallow: /tmp/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+Disallow: /*?*
+
+# Permitir indexação de imagens
+Allow: /assets/
+Allow: /images/
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.png$
+Allow: /*.webp$
+
+# Sitemap
+Sitemap: https://minassmart.com.br/sitemap.xml
+
+# Crawl-delay para bots específicos
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: bingbot
+Crawl-delay: 2
+
+User-agent: Yandex
+Crawl-delay: 3
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Crawl-delay: 5
+Allow: /*.js$
+Allow: /*.css$
+
+User-agent: Bingbot
+Crawl-delay: 10
+Allow: /*.js$
+Allow: /*.css$
+
+User-agent: YandexBot
+Crawl-delay: 10
+Allow: /*.js$
+Allow: /*.css$
+
+User-agent: DuckDuckBot
+Crawl-delay: 10
+Allow: /*.js$
+Allow: /*.css$
 
 # Permitir indexação de conteúdo importante
 Allow: /index.html

@@ -16,6 +16,7 @@
   <meta name="description" content="Minas Smart oferece soluções de automação residencial inteligente com o jeitinho mineiro: acolhedora, eficiente e cheia de propósito." />
   <meta name="keywords" content="Automação Residencial, Casa Inteligente, Minas Smart, Tecnologia, Automação" />
   <meta name="author" content="Minas Smart" />
+  <meta name="robots" content="index, follow" />
   
   <!-- Polyfills para navegadores antigos -->
   <script>
@@ -74,6 +75,11 @@
       }
     }, true);
   </script>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#2196F3">
+  <link rel="apple-touch-icon" href="/img/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -256,6 +262,10 @@
                 <i class="fas fa-wifi"></i>
                 <span>Conexão Wi-Fi</span>
               </div>
+              <div class="feature-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuração básica</span>
+              </div>
             </div>
             <a href="#contact" class="btn">Solicitar orçamento</a>
           </div>
@@ -296,6 +306,14 @@
               <div class="feature-item">
                 <i class="fas fa-chart-line"></i>
                 <span>Monitoramento de energia</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-sync"></i>
+                <span>Automação de rotinas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-tools"></i>
+                <span>Suporte prioritário</span>
               </div>
             </div>
             <a href="#contact" class="btn">Solicitar orçamento</a>
@@ -340,6 +358,18 @@
               <div class="feature-item">
                 <i class="fas fa-history"></i>
                 <span>Histórico de eventos</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-headset"></i>
+                <span>Suporte 24/7</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-shield-virus"></i>
+                <span>Proteção avançada</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-cogs"></i>
+                <span>Configuração completa</span>
               </div>
             </div>
             <a href="#contact" class="btn">Solicitar orçamento</a>
@@ -567,5 +597,32 @@
   <script src="js/main.js" defer 
           onerror="console.error('Erro ao carregar o script principal'); 
                    document.body.innerHTML += '<div class=\'error-message\'>Erro ao carregar recursos. Por favor, recarregue a página.</div>';"></script>
+
+  <!-- Registrar Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registrado com sucesso:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Falha ao registrar ServiceWorker:', error);
+          });
+      });
+    }
+  </script>
+
+  <!-- Analytics (com respeito à privacidade) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
 </body>
 </html>
