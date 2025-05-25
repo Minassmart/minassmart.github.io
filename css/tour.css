@@ -1,0 +1,653 @@
+/* Estilos base */
+:root {
+  --primary-color: #ff5400;
+  --primary-hover: #ff6b1a;
+  --text-color: #333;
+  --bg-color: #f8f9fa;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --overlay-bg: rgba(0, 0, 0, 0.8);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+.tour-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 60px);
+  background: var(--bg-color);
+  overflow: hidden;
+}
+
+/* Overlay de introdução */
+.tour-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-bg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.tour-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tour-intro {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 600px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--primary-color);
+}
+
+.tour-intro h1 {
+  color: var(--primary-color);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.tour-intro p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* Controles do tour */
+.tour-controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.room-selector, .room-controls {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.room-controls {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.room-btn, .control-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--text-color);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.room-btn:hover, .control-btn:hover {
+  background: rgba(255, 84, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.room-btn.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+.room-btn i, .control-btn i {
+  font-size: 1.2rem;
+}
+
+/* Área do Canvas e 3D */
+.tour-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-color);
+}
+
+#tour3D {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+#roomCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: transparent;
+}
+
+#interactionPoints {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.interaction-point {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s infinite;
+  z-index: 4;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 84, 0, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 84, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 84, 0, 0);
+  }
+}
+
+/* Cartão de informações */
+.room-info {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: 90%;
+  max-width: 600px;
+}
+
+.info-card {
+  background: var(--card-bg);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.info-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.info-card p {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text-color);
+}
+
+/* Cards de funcionalidades */
+.tour-features {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.feature-card {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  width: 250px;
+  transition: var(--transition);
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card i {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.feature-card p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--text-color);
+}
+
+/* Botão de início */
+.btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .tour-controls {
+    top: auto;
+    bottom: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .room-selector, .room-controls {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .tour-features {
+    display: none;
+  }
+
+  .room-info {
+    bottom: 100px;
+  }
+
+  .tour-intro h1 {
+    font-size: 2rem;
+  }
+}
+
+/* Estilos para mensagem de erro */
+.tour-error {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 600px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--primary-color);
+  z-index: 2000;
+}
+
+.tour-error h2 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.tour-error p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.tour-error ul {
+  text-align: left;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+}
+
+.tour-error li {
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.tour-error .btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.tour-error .btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .tour-error {
+    width: 90%;
+    padding: 1.5rem;
+  }
+  
+  .tour-error h2 {
+    font-size: 1.5rem;
+  }
+  
+  .tour-error p {
+    font-size: 1rem;
+  }
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-outline:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Estilos para noscript */
+noscript .tour-error {
+  display: block;
+  text-align: center;
+}
+
+/* Estilos para o painel de comandos */
+.command-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    border-top: 2px solid #ff5400;
+    box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: none;
+    font-family: var(--font-family);
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.3s ease;
+}
+
+/* Estilos para o painel de controle */
+.control-panel {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 80%;
+    max-width: 400px;
+}
+
+.control-section {
+    margin-bottom: 15px;
+}
+
+.control-section h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.control-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.control-buttons button {
+    padding: 8px 12px;
+    border: none;
+    background: #ff5400;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-buttons button:hover {
+    background: #ff6a1f;
+}
+
+.control-buttons button:active {
+    transform: scale(0.95);
+}
+
+/* Media queries */
+@media (max-width: 768px) {
+    .command-panel {
+        display: block;
+        height: 35vh;
+        transform: translateY(0);
+    }
+    
+    #tour-container {
+        height: 65vh !important;
+        margin-bottom: 35vh;
+    }
+
+    .control-panel {
+        bottom: calc(35vh + 20px);
+        width: 90%;
+    }
+}
+
+@media (max-width: 480px) {
+    .command-panel {
+        height: 40vh;
+    }
+    
+    #tour-container {
+        height: 60vh !important;
+        margin-bottom: 40vh;
+    }
+
+    .command-content {
+        height: calc(40vh - 80px) !important;
+    }
+
+    .tab-content.active {
+        grid-template-columns: 1fr !important;
+        padding: 0 5px;
+    }
+
+    .command-card {
+        padding: 10px !important;
+    }
+
+    .command-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 18px !important;
+    }
+
+    .control-panel {
+        bottom: calc(40vh + 20px);
+    }
+}
+
+@media (max-width: 360px) {
+    .command-header {
+        padding: 10px !important;
+    }
+
+    .command-header h3 {
+        font-size: 1em !important;
+        margin-bottom: 8px !important;
+    }
+
+    .tab-btn {
+        padding: 6px 12px !important;
+        font-size: 0.8em !important;
+    }
+
+    .command-text strong {
+        font-size: 0.85em !important;
+    }
+
+    .command-text span {
+        font-size: 0.75em !important;
+    }
+}
+
+/* Estilos do cabeçalho do painel de comandos */
+.command-header {
+    padding: 15px;
+    background: #ff5400;
+    color: white;
+    border-radius: 20px 20px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.command-header h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2em;
+    font-weight: 500;
+    text-align: center;
+}
+
+.command-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 0 10px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+}
+
+.tab-btn:active {
+    transform: scale(0.95);
+}
+
+.tab-btn.active {
+    background: white;
+    color: #ff5400;
+    font-weight: 500;
+}
+
+.command-content {
+    padding: 15px;
+    overflow-y: auto;
+    height: calc(35vh - 90px);
+    -webkit-overflow-scrolling: touch;
+}
+
+.tab-content {
+    display: none;
+    grid-gap: 12px;
+}
+
+.tab-content.active {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.command-card {
+    background: white;
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eee;
+    transition: transform 0.2s ease;
+}
+
+.command-card:active {
+    transform: scale(0.98);
+}
+
+.command-icon {
+    font-size: 22px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff5f0;
+    border-radius: 12px;
+    color: #ff5400;
+    flex-shrink: 0;
+}
+
+.command-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.command-text strong {
+    display: block;
+    color: #ff5400;
+    font-size: 0.9em;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.command-text span {
+    display: block;
+    font-size: 0.8em;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+} 

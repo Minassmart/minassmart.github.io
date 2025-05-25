@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro de Carregamento - Minas Smart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+        
+        .error-container {
+            max-width: 600px;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #ff5400;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            color: #3c4043;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #ff5400;
+            color: white;
+            text-decoration: none;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #ff7a33;
+            transform: translateY(-2px);
+        }
+        
+        .suggestions {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .suggestions h2 {
+            color: #3c4043;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+        
+        .suggestions ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .suggestions li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .suggestions li:before {
+            content: "•";
+            color: #ff5400;
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Ops! Algo deu errado</h1>
+        <p>Tempo limite excedido ao carregar dependências. Por favor, tente uma das seguintes soluções:</p>
+        
+        <a href="/" class="btn">Recarregar a Página</a>
+        
+        <div class="suggestions">
+            <h2>Sugestões para resolver:</h2>
+            <ul>
+                <li>Verifique sua conexão com a internet</li>
+                <li>Limpe o cache do navegador</li>
+                <li>Use um navegador mais recente (Chrome, Firefox, Safari ou Edge)</li>
+                <li>Desative extensões que possam estar bloqueando recursos</li>
+                <li>Se o problema persistir, entre em contato conosco: houseminassmart@gmail.com</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

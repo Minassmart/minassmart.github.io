@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour Virtual - Minas Smart</title>
+  <link rel="stylesheet" href="css/tour.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      background-color: #f0f0f0;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .temp-feedback {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 16px;
+      z-index: 2000;
+      animation: fadeInOut 2s ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
+
+    #scene-selector {
+      position: fixed;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+
+    .scene-option {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      margin: 5px 0;
+      background: #fff;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .scene-option:hover {
+      border-color: #ff5400;
+      transform: translateX(5px);
+    }
+
+    .scene-option.active {
+      background: #ff5400;
+      color: white;
+    }
+
+    .scene-option img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+    .scene-option span {
+      font-weight: 500;
+    }
+
+    #tour-container {
+      width: 75vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #functions-panel {
+      position: fixed;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      max-width: 300px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .function-group {
+      margin-bottom: 20px;
+    }
+
+    .function-group h3 {
+      color: #ff5400;
+      margin: 0 0 10px 0;
+      font-size: 1.1em;
+      border-bottom: 2px solid #ff5400;
+      padding-bottom: 5px;
+    }
+
+    .function-item {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .function-item h4 {
+      margin: 0 0 5px 0;
+      color: #333;
+      font-size: 1em;
+    }
+
+    .function-item p {
+      margin: 0 0 10px 0;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    .function-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      padding: 8px 16px;
+      border: none;
+      background: #ff5400;
+      color: white;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: all 0.3s ease;
+    }
+
+    .control-btn:hover {
+      background: #ff6b1a;
+      transform: translateY(-2px);
+    }
+
+    .control-btn:active {
+      transform: translateY(0);
+    }
+
+    .scene-preset {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .scene-preset:hover {
+      background: #fff5f0;
+      transform: translateX(5px);
+    }
+
+    .scene-preset i {
+      font-size: 1.2em;
+      color: #ff5400;
+    }
+
+    .scene-preset-info {
+      flex: 1;
+    }
+
+    .scene-preset-info h4 {
+      margin: 0;
+      color: #333;
+      font-size: 1em;
+    }
+
+    .scene-preset-info p {
+      margin: 5px 0 0 0;
+      color: #666;
+      font-size: 0.8em;
+    }
+
+    @media (max-width: 768px) {
+      #functions-panel {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        top: auto;
+        transform: none;
+        max-width: none;
+        max-height: 40vh;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .function-group {
+        margin-bottom: 15px;
+      }
+
+      .function-item {
+        padding: 12px;
+      }
+
+      .control-btn {
+        padding: 6px 12px;
+        font-size: 0.8em;
+      }
+    }
+
+    #point-info {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      display: none;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #point-info h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.2em;
+    }
+
+    #point-info p {
+      margin: 0;
+      font-size: 0.9em;
+    }
+
+    #instructions {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    #back-button {
+      position: fixed;
+      top: 20px;
+      right: calc(25vw + 20px);
+      background: #ff5400;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 24px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    #back-button:hover {
+      background: #ff7a33;
+      transform: translateY(-2px);
+    }
+
+    .contact-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .contact-form {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-header img {
+      width: auto;
+      height: 60px;
+      margin-bottom: 20px;
+    }
+
+    .form-header h2 {
+      color: #ff5400;
+      margin: 0 0 15px 0;
+      font-size: 24px;
+    }
+
+    .form-header p {
+      color: #666;
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      width: 100%;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: #333;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+      border-color: #ff5400;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 84, 0, 0.1);
+    }
+
+    .form-group.checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 30px 0;
+    }
+
+    .form-group.checkbox input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+    }
+
+    .form-group.checkbox label {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #666;
+    }
+
+    .start-tour-btn {
+      background: #ff5400;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .start-tour-btn:hover {
+      background: #ff7a33;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 600px) {
+      .contact-form {
+        padding: 25px;
+        margin: 15px;
+      }
+
+      .form-header {
+        margin-bottom: 25px;
+      }
+
+      .form-header h2 {
+        font-size: 20px;
+      }
+
+      .form-header p {
+        font-size: 14px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group input {
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+
+      .form-group.checkbox {
+        margin: 20px 0;
+      }
+
+      .start-tour-btn {
+        padding: 12px 25px;
+        font-size: 15px;
+      }
+    }
+
+    .success-message {
+      display: none;
+      text-align: center;
+      color: #28a745;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #d4edda;
+    }
+
+    .error-message {
+      display: none;
+      text-align: center;
+      color: #dc3545;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #f8d7da;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .contact-form {
+      animation: fadeIn 0.5s ease;
+    }
+
+    .scene-option.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .scene-option.disabled::after {
+      content: "Em breve";
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8em;
+      color: #666;
+      background: #f0f0f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .window {
+      position: absolute;
+      width: 200px;
+      height: 300px;
+      background: linear-gradient(135deg, rgba(135, 206, 235, 0.7), rgba(255, 255, 255, 0.9));
+      border: 8px solid #8b4513;
+      border-radius: 5px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      z-index: 100;
+    }
+
+    .window::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background-color: #8b4513;
+      transform: translateY(-50%);
+    }
+
+    .window::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 8px;
+      background-color: #8b4513;
+      transform: translateX(-50%);
+    }
+
+    .window-reflection {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      height: 40%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div id="scene-selector">
+    <div class="scene-option active" data-scene="sala">
+      <img src="assets/thumbnails/placeholder.svg" alt="Sala">
+      <span>Sala</span>
+    </div>
+    <div class="scene-option disabled" data-scene="cozinha">
+      <img src="assets/thumbnails/placeholder.svg" alt="Cozinha">
+      <span>Cozinha</span>
+    </div>
+    <div class="scene-option disabled" data-scene="quarto">
+      <img src="assets/thumbnails/placeholder.svg" alt="Quarto">
+      <span>Quarto</span>
+    </div>
+    <div class="scene-option disabled" data-scene="banheiro">
+      <img src="assets/thumbnails/placeholder.svg" alt="Banheiro">
+      <span>Banheiro</span>
+    </div>
+    <div class="scene-option disabled" data-scene="externo">
+      <img src="assets/thumbnails/placeholder.svg" alt="Área Externa">
+      <span>Área Externa</span>
+    </div>
+  </div>
+
+  <div id="tour-container">
+  </div>
+  <div id="functions-panel">
+    <div class="function-group">
+      <h3>Iluminação</h3>
+      <div class="function-item">
+        <h4>Luz Principal</h4>
+        <p>Controle a intensidade da iluminação principal</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleLight('main', 'on')">Ligar</button>
+          <button class="control-btn" onclick="toggleLight('main', 'off')">Desligar</button>
+        </div>
+      </div>
+      <div class="function-item">
+        <h4>Luzes Coloridas</h4>
+        <p>Controle as luzes de ambiente</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="setLightColor(0xff0000)">Vermelho</button>
+          <button class="control-btn" onclick="setLightColor(0x00ff00)">Verde</button>
+          <button class="control-btn" onclick="setLightColor(0x0000ff)">Azul</button>
+          <button class="control-btn" onclick="startColorCycle()">Ciclo</button>
+          <button class="control-btn" onclick="stopColorCycle()">Parar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="function-group">
+      <h3>Climatização</h3>
+      <div class="function-item">
+        <h4>Ar Condicionado</h4>
+        <p>Controle a temperatura do ambiente</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleAC('on')">Ligar</button>
+          <button class="control-btn" onclick="toggleAC('off')">Desligar</button>
+          <button class="control-btn" onclick="adjustTemp('up')">Aumentar</button>
+          <button class="control-btn" onclick="adjustTemp('down')">Diminuir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="function-group">
+      <h3>Cortinas</h3>
+      <div class="function-item">
+        <h4>Controle das Cortinas</h4>
+        <p>Ajuste a posição das cortinas</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleCurtains('open')">Abrir</button>
+          <button class="control-btn" onclick="toggleCurtains('half')">Meio</button>
+          <button class="control-btn" onclick="toggleCurtains('closed')">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="function-group">
+      <h3>Entretenimento</h3>
+      <div class="function-item">
+        <h4>Smart TV</h4>
+        <p>Controle da televisão</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleTV('on')">Ligar</button>
+          <button class="control-btn" onclick="toggleTV('off')">Desligar</button>
+        </div>
+      </div>
+      <div class="function-item">
+        <h4>Som Ambiente</h4>
+        <p>Controle do sistema de áudio</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleSound('on')">Ligar</button>
+          <button class="control-btn" onclick="toggleSound('off')">Desligar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="function-group">
+      <h3>Segurança</h3>
+      <div class="function-item">
+        <h4>Sensores</h4>
+        <p>Monitoramento de presença e movimento</p>
+        <div class="function-controls">
+          <button class="control-btn" onclick="toggleSensors('on')">Ativar</button>
+          <button class="control-btn" onclick="toggleSensors('off')">Desativar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="function-group">
+      <h3>Cenas Pré-configuradas</h3>
+      <div class="scene-preset" onclick="activateScenePreset('cinema')">
+        <i class="fas fa-film"></i>
+        <div class="scene-preset-info">
+          <h4>Modo Cinema</h4>
+          <p>Cortinas fechadas, luzes baixas, TV ligada</p>
+        </div>
+      </div>
+      <div class="scene-preset" onclick="activateScenePreset('festa')">
+        <i class="fas fa-music"></i>
+        <div class="scene-preset-info">
+          <h4>Modo Festa</h4>
+          <p>Luzes coloridas, som ambiente, cortinas abertas</p>
+        </div>
+      </div>
+      <div class="scene-preset" onclick="activateScenePreset('leitura')">
+        <i class="fas fa-book"></i>
+        <div class="scene-preset-info">
+          <h4>Modo Leitura</h4>
+          <p>Iluminação suave, som desligado</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="point-info" style="display: none;"></div>
+  <div id="instructions">Clique nos pontos interativos para mais informações</div>
+  <button id="back-button" onclick="window.location.href='index.html'">Voltar ao Site</button>
+
+  <script src="js/tour-virtual.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initTour();
+    });
+  </script>
+</body>
+</html> 

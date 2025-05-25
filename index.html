@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' https: 'unsafe-inline' 'unsafe-eval'; style-src 'self' https: 'unsafe-inline'; img-src 'self' https: data:; font-src 'self' https: data:; connect-src 'self' https:; frame-src 'none';" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Minas Smart - Automação Residencial Inteligente</title>
+  <meta name="description" content="Minas Smart oferece soluções de automação residencial inteligente com o jeitinho mineiro: acolhedora, eficiente e cheia de propósito." />
+  <meta name="keywords" content="Automação Residencial, Casa Inteligente, Minas Smart, Tecnologia, Automação" />
+  <meta name="author" content="Minas Smart" />
+  
+  <!-- Preload recursos críticos -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Minas Smart - Automação Residencial Inteligente" />
+  <meta property="og:description" content="Soluções inteligentes de automação residencial com um toque mineiro." />
+  <meta property="og:image" content="assets/logo.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://minassmart.com.br" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Minas Smart - Automação Residencial Inteligente" />
+  <meta name="twitter:description" content="Soluções inteligentes de automação residencial com um toque mineiro." />
+  <meta name="twitter:image" content="assets/logo.jpg" />
+
+  <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  
+  <!-- Fallback para Font Awesome -->
+  <script>
+    function handleFontAwesomeError() {
+      var link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://use.fontawesome.com/releases/v6.0.0/css/all.min.css';
+      document.head.appendChild(link);
+    }
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="#home" aria-label="Minas Smart Home">
+      <img src="assets/minas-smart-color2-v2.png" alt="Minas Smart Logo" class="header-logo" />
+    </a>
+
+    <button class="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav id="menu" role="navigation" aria-label="Menu principal">
+      <a href="#home" tabindex="0">Home</a>
+      <a href="#about" tabindex="0">Sobre</a>
+      <a href="#services" tabindex="0">Soluções</a>
+      <a href="#plans" tabindex="0">Planos</a>
+      <a href="tour-virtual.html" tabindex="0">Tour Virtual</a>
+      <a href="#contact" tabindex="0">Contato</a>
+    </nav>
+  </header>
+
+  <main>
+  <section id="home" class="hero" role="banner" aria-label="Imagem principal e slogan">
+      <h1>Transforme sua casa em um ambiente inteligente</h1>
+      <p>Automação residencial com tecnologia de ponta e o acolhimento mineiro que você merece</p>
+      <div class="hero-buttons">
+        <a href="#contact" class="btn">Solicite um orçamento</a>
+        <a href="#services" class="btn btn-outline">Conheça nossas soluções</a>
+      </div>
+  </section>
+
+    <section id="about" class="full-section section-dark fade-section" aria-labelledby="about-title">
+      <div class="about-container">
+    <h2 id="about-title">Sobre a Minas Smart</h2>
+        
+        <div class="about-grid">
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <h3>Quem somos</h3>
+            <p>A Minas Smart é uma empresa mineira de tecnologia fundada no início de 2025, com a missão de transformar residências em ambientes mais inteligentes, confortáveis e eficientes, por meio da automação residencial acessível e de alta qualidade.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-heart"></i>
+            </div>
+            <h3>Propósito</h3>
+            <p>Nosso trabalho vai além da tecnologia: acreditamos no poder da educação para mudar realidades. Em breve, implementaremos projetos sociais voltados à formação de jovens e adolescentes no campo da tecnologia, com foco em inclusão digital, desenvolvimento de habilidades e preparação para o mercado de trabalho.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-eye"></i>
+            </div>
+            <h3>Visão</h3>
+            <p>Queremos ser referência em automação residencial no estado de Minas Gerais, unindo inovação, responsabilidade social e impacto positivo nas comunidades onde atuamos.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-bullseye"></i>
+            </div>
+            <h3>Missão</h3>
+            <p>Levar conforto, segurança e praticidade às residências mineiras por meio de soluções tecnológicas, enquanto impulsionamos o desenvolvimento de jovens talentos na área de tecnologia.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-map-marked-alt"></i>
+            </div>
+            <h3>Atuação</h3>
+            <p>Atualmente, atuamos em João Monlevade e região, oferecendo projetos personalizados de automação residencial, com foco na praticidade, eficiência energética e conectividade.</p>
+          </div>
+
+          <div class="about-card">
+            <div class="about-icon">
+              <i class="fas fa-rocket"></i>
+            </div>
+            <h3>Compromisso com a inovação</h3>
+            <p>A Minas Smart também investe continuamente em pesquisa, desenvolvimento tecnológico e no estudo de novas tecnologias, buscando sempre oferecer o que há de mais moderno e eficiente no mercado.</p>
+          </div>
+        </div>
+
+        <div class="about-footer">
+          <p class="highlight-text">Quando você escolhe a Minas Smart, está investindo em você e no futuro de muitos jovens mineiros.</p>
+        </div>
+    </div>
+  </section>
+
+    <section id="services" class="full-section section-light fade-section" aria-labelledby="services-title">
+      <div class="section">
+        <h2 id="services-title">Nossas Soluções Inteligentes</h2>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-image">
+              <img src="assets/automação.png" alt="Sistema de Iluminação Inteligente" />
+            </div>
+            <div class="service-content">
+              <h3>Iluminação Inteligente</h3>
+              <p>Controle total da iluminação via smartphone ou comando de voz</p>
+              <ul>
+                <li>Cenários personalizados</li>
+                <li>Economia de energia</li>
+                <li>Integração com sensores</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div class="service-image">
+              <img src="assets/casa-minas.jpg" alt="Sistema de Segurança Residencial" />
+            </div>
+            <div class="service-content">
+              <h3>Segurança Avançada</h3>
+              <p>Sistema completo de monitoramento e proteção</p>
+              <ul>
+                <li>Câmeras inteligentes</li>
+                <li>Sensores de movimento</li>
+                <li>Controle de acesso</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="service-card">
+            <div class="service-image">
+              <img src="assets/robo.jpg" alt="Sistema de Climatização Inteligente" />
+            </div>
+            <div class="service-content">
+              <h3>Climatização Smart</h3>
+              <p>Conforto térmico automatizado e econômico</p>
+              <ul>
+                <li>Controle por zonas</li>
+                <li>Programação inteligente</li>
+                <li>Economia de energia</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+    </div>
+  </section>
+
+    <section id="plans" class="full-section section-dark fade-section" aria-labelledby="plans-title">
+      <div class="section">
+        <h2 id="plans-title">Escolha o Plano Ideal</h2>
+        <div class="plan-row">
+          <div class="plan">
+            <div class="plan-header">
+              <div class="plan-icon">
+                <i class="fas fa-home"></i>
+              </div>
+              <h3>Plano Essencial</h3>
+              <p class="plan-subtitle">Automação básica para começar</p>
+            </div>
+            <div class="plan-description">
+              <p>2 interruptores inteligentes, controle por app/voz, integração com Alexa ou Google.</p>
+            </div>
+            <div class="plan-features">
+              <div class="feature-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>2 pontos de automação</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Controle por app</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-microphone-alt"></i>
+                <span>Comando por voz</span>
+              </div>
+              <div class="feature-item">
+                <i class="fab fa-amazon"></i>
+                <span>Alexa compatível</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-wifi"></i>
+                <span>Conexão Wi-Fi</span>
+              </div>
+            </div>
+            <a href="#contact" class="btn">Solicitar orçamento</a>
+          </div>
+          
+          <div class="plan featured">
+            <div class="plan-header">
+              <span class="badge">Mais Popular</span>
+              <div class="plan-icon">
+                <i class="fas fa-star"></i>
+              </div>
+              <h3>Plano Conforto</h3>
+              <p class="plan-subtitle">Mais conforto para seu dia a dia</p>
+            </div>
+            <div class="plan-description">
+              <p>Essencial + sensor de presença, tomada inteligente e controle de climatização.</p>
+            </div>
+            <div class="plan-features">
+              <div class="feature-item">
+                <i class="fas fa-lightbulb"></i>
+                <span>4 pontos de automação</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-plug"></i>
+                <span>2 tomadas automatizadas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-temperature-low"></i>
+                <span>Controle de clima</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-clock"></i>
+                <span>Agendamentos</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-user-shield"></i>
+                <span>Sensor de presença</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Monitoramento de energia</span>
+              </div>
+            </div>
+            <a href="#contact" class="btn">Solicitar orçamento</a>
+          </div>
+
+          <div class="plan">
+            <div class="plan-header">
+              <div class="plan-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>Plano Completo</h3>
+              <p class="plan-subtitle">Automação total e segurança</p>
+            </div>
+            <div class="plan-description">
+              <p>Conforto + câmeras, sensores de porta/janela e automação de cortinas ou portão.</p>
+            </div>
+            <div class="plan-features">
+              <div class="feature-item">
+                <i class="fas fa-video"></i>
+                <span>Câmeras de segurança</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-door-closed"></i>
+                <span>Sensores em portas/janelas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-garage"></i>
+                <span>Portão automático</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-blinds"></i>
+                <span>Cortinas automatizadas</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-bell"></i>
+                <span>Notificações em tempo real</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-cloud"></i>
+                <span>Backup na nuvem</span>
+              </div>
+              <div class="feature-item">
+                <i class="fas fa-history"></i>
+                <span>Histórico de eventos</span>
+              </div>
+            </div>
+            <a href="#contact" class="btn">Solicitar orçamento</a>
+          </div>
+        </div>
+    </div>
+  </section>
+
+    <section id="faq" class="full-section section-light fade-section" aria-labelledby="faq-title">
+      <div class="section">
+        <h2 id="faq-title">Perguntas Frequentes</h2>
+        
+        <div class="faq-search">
+          <input type="text" id="faq-search" placeholder="Digite sua dúvida aqui..." aria-label="Buscar perguntas frequentes">
+          <i class="fas fa-search"></i>
+        </div>
+
+        <div class="faq-container">
+          <div class="faq-item" data-question="automação residencial controle remoto">
+            <div class="faq-header">
+              <h3>O que é automação residencial?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>Automação residencial é a tecnologia que permite controlar diversos aspectos da sua casa (iluminação, temperatura, segurança, etc.) de forma automatizada e remota, proporcionando mais conforto, segurança e eficiência energética.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" data-question="instalação elétrica trocar fiação">
+            <div class="faq-header">
+              <h3>Preciso trocar toda a instalação elétrica da minha casa?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>Não necessariamente. Na maioria dos casos, podemos aproveitar a instalação existente e adicionar os dispositivos inteligentes de forma modular, permitindo que você automatize sua casa gradualmente.</p>
+            </div>
+          </div>
+
+          <div class="faq-item" data-question="controle celular smartphone app">
+            <div class="faq-header">
+              <h3>É possível controlar tudo pelo celular?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>Sim! Todos os nossos sistemas podem ser controlados através de um aplicativo no seu smartphone, além de comandos de voz através de assistentes virtuais como Alexa e Google Assistant.</p>
+            </div>
+          </div>
+
+          <div class="faq-item hidden" data-question="tempo instalação demora">
+            <div class="faq-header">
+              <h3>A instalação é demorada?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>O tempo de instalação varia conforme o projeto, mas a maioria das instalações básicas pode ser concluída em 1-2 dias, com mínima interferência na sua rotina.</p>
+            </div>
+          </div>
+
+          <div class="faq-item hidden" data-question="energia falta backup bateria">
+            <div class="faq-header">
+              <h3>E se faltar energia, os sistemas continuam funcionando?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>Os dispositivos voltam a funcionar normalmente quando a energia retorna, mantendo suas configurações. Alguns sistemas podem incluir backup de bateria para funções essenciais.</p>
+            </div>
+          </div>
+
+          <div class="faq-item hidden" data-question="suporte técnico ajuda assistência">
+            <div class="faq-header">
+              <h3>Vocês oferecem suporte técnico após a instalação?</h3>
+              <button class="faq-toggle" aria-label="Expandir resposta">
+                <i class="fas fa-chevron-down"></i>
+              </button>
+            </div>
+            <div class="faq-content">
+              <p>Sim! Oferecemos suporte técnico para todos os nossos clientes, garantindo que você aproveite ao máximo seu sistema de automação.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-more">
+          <button id="show-more-faq" class="btn btn-outline">Ver Mais Perguntas</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="full-section section-dark fade-section" aria-labelledby="contact-title">
+      <div class="section">
+        <h2 id="contact-title">Fale Conosco</h2>
+        <div class="contact-container">
+          <div class="contact-info">
+            <h3>Informações de Contato</h3>
+            <p><i class="fas fa-map-marker-alt"></i> João Monlevade - MG</p>
+            <p><i class="fas fa-envelope"></i> houseminassmart@gmail.com</p>
+            <p><i class="fab fa-whatsapp"></i> (31) 99371-6975</p>
+            <div class="social-links">
+              <a href="https://www.instagram.com/minassmart/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="https://wa.me/5531993716975" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+          </div>
+          
+    <form action="https://formsubmit.co/houseminassmart@gmail.com" method="POST" aria-label="Formulário de contato">
+      <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" value="https://minassmart.com.br/obrigado.html" />
+      <input type="hidden" name="_subject" value="Novo contato do site Minas Smart" />
+      <input type="hidden" name="_template" value="box" />
+      <input type="hidden" name="_csrf" value="" />
+      <input type="text" name="_honey" style="display:none" />
+            <div class="form-group">
+      <label for="name">Nome completo</label>
+      <input type="text" id="name" name="name" required aria-required="true" 
+             placeholder="Seu nome" pattern="[A-Za-zÀ-ÿ\s]{2,100}" 
+             title="Por favor, insira um nome válido (apenas letras e espaços)" 
+             maxlength="100" />
+            </div>
+
+            <div class="form-group">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" name="email" required aria-required="true" 
+             placeholder="seu@email.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+             title="Por favor, insira um e-mail válido" maxlength="100" />
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Telefone</label>
+              <input type="tel" id="phone" name="phone" placeholder="(00) 00000-0000" 
+                     pattern="\([0-9]{2}\) [0-9]{5}-[0-9]{4}"
+                     title="Por favor, insira um telefone no formato (00) 00000-0000" />
+            </div>
+
+            <div class="form-group">
+              <label for="service">Serviço de interesse</label>
+              <select id="service" name="service">
+                <option value="">Selecione um serviço</option>
+                <option value="iluminacao">Iluminação Inteligente</option>
+                <option value="seguranca">Segurança Residencial</option>
+                <option value="climatizacao">Climatização Smart</option>
+                <option value="outros">Outros</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+      <label for="message">Mensagem</label>
+              <textarea id="message" name="message" rows="5" required aria-required="true" placeholder="Como podemos ajudar?"></textarea>
+            </div>
+
+            <button type="submit" aria-label="Enviar mensagem">Enviar Mensagem</button>
+    </form>
+        </div>
+      </div>
+  </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-info">
+        <img src="assets/minas-smart-color2-v2.png" alt="Minas Smart Logo" class="footer-logo" />
+        <p>Transformando casas em ambientes inteligentes com o verdadeiro jeito mineiro de ser.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Links Rápidos</h4>
+        <a href="#about">Sobre</a>
+        <a href="#services">Soluções</a>
+        <a href="#plans">Planos</a>
+        <a href="#contact">Contato</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contato</h4>
+        <p><i class="fas fa-envelope"></i> houseminassmart@gmail.com</p>
+        <p><i class="fab fa-whatsapp"></i> (31) 99371-6975</p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/minassmart/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://wa.me/5531993716975" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Minas Smart. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <div id="cookie-banner" class="cookie-banner">
+    <div class="cookie-content">
+      <p>Utilizamos cookies para melhorar sua experiência em nosso site. Ao continuar navegando, você concorda com nossa <a href="privacy-policy.html">Política de Privacidade</a>.</p>
+      <div class="cookie-buttons">
+        <button id="accept-cookies" class="btn-cookie accept">Aceitar</button>
+        <button id="reject-cookies" class="btn-cookie reject">Rejeitar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="smart-cta" class="smart-cta">
+    <div class="smart-cta-content">
+      <div class="smart-cta-text">
+        <h4>Transforme sua casa hoje!</h4>
+        <p class="cta-description">Aproveite condições especiais para automatizar sua residência</p>
+      </div>
+      <div class="smart-cta-buttons">
+        <a href="#plans" class="btn">Ver Planos</a>
+        <a href="#contact" class="btn btn-outline">Solicitar Orçamento</a>
+      </div>
+    </div>
+    <button class="smart-cta-close" aria-label="Fechar">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Botão do WhatsApp -->
+  <a href="https://wa.me/5531993716975" target="_blank" rel="noopener noreferrer" class="whatsapp-button" aria-label="Fale conosco pelo WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <script src="js/main.js" defer onerror="console.error('Erro ao carregar o script principal')"></script>
+</body>
+</html>

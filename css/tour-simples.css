@@ -1,0 +1,401 @@
+/* Variáveis */
+:root {
+  --cor-primaria: #ff5400;
+  --cor-secundaria: #3c4043;
+  --cor-bg: #f8f9fa;
+  --cor-texto: #333;
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --transicao: all 0.3s ease;
+  
+  /* Cores do ambiente */
+  --cor-parede: #f5f5f5;
+  --cor-piso: #e0e0e0;
+  --cor-sofa: #607d8b;
+  --cor-tv: #263238;
+}
+
+/* Container principal */
+.tour-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+}
+
+/* Seletor de Ambientes */
+.ambiente-selector {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.ambiente-btn {
+  background: white;
+  border: 2px solid var(--cor-primaria);
+  color: var(--cor-primaria);
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  transition: var(--transicao);
+}
+
+.ambiente-btn:hover,
+.ambiente-btn.active {
+  background: var(--cor-primaria);
+  color: white;
+}
+
+.ambiente-btn i {
+  font-size: 20px;
+}
+
+/* Ambiente Simulado */
+.ambiente-simulado {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  margin: 0;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  background: var(--cor-parede);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--sombra);
+}
+
+/* Paredes */
+.parede {
+  position: absolute;
+  background: var(--cor-parede);
+}
+
+.parede-fundo {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #e0e0e0, var(--cor-parede));
+  transform: translateZ(-300px);
+}
+
+.parede-esquerda {
+  width: 300px;
+  height: 100%;
+  left: 0;
+  background: linear-gradient(to right, #d0d0d0, var(--cor-parede));
+  transform: rotateY(90deg) translateZ(-150px);
+}
+
+.parede-direita {
+  width: 300px;
+  height: 100%;
+  right: 0;
+  background: linear-gradient(to left, #d0d0d0, var(--cor-parede));
+  transform: rotateY(-90deg) translateZ(-150px);
+}
+
+.piso {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  background: var(--cor-piso);
+  transform: rotateX(90deg) translateZ(300px);
+  background-image: linear-gradient(45deg, #e0e0e0 25%, transparent 25%),
+                    linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+                    linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+  background-size: 60px 60px;
+  background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+}
+
+/* Sofá */
+.sofa {
+  position: absolute;
+  bottom: 50px;
+  left: 100px;
+  width: 300px;
+  height: 150px;
+}
+
+.sofa-base {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60%;
+  background: var(--cor-sofa);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.sofa-encosto {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 50%;
+  background: var(--cor-sofa);
+  border-radius: 10px;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+/* TV e Painel */
+.tv-painel {
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 250px;
+  background: #424242;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.tv {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
+  background: var(--cor-tv);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.tv-tela {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.9;
+  transition: var(--transicao);
+}
+
+.tv-ligada .tv-tela {
+  background: linear-gradient(45deg, #2196f3, #4caf50);
+  animation: tv-ligada 5s infinite;
+}
+
+/* Luzes */
+.luz {
+  position: absolute;
+  border-radius: 50%;
+  transition: var(--transicao);
+}
+
+.luz-principal {
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+.luz-ambiente {
+  top: 50%;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+.luzes-acesas .luz {
+  box-shadow: 0 0 50px rgba(255, 244, 230, 0.8);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+}
+
+/* Sensores */
+.sensor-movimento,
+.sensor-temperatura {
+  position: absolute;
+  padding: 10px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  box-shadow: var(--sombra);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.sensor-movimento {
+  top: 20px;
+  right: 20px;
+}
+
+.sensor-temperatura {
+  bottom: 20px;
+  right: 20px;
+  flex-direction: column;
+}
+
+.temperatura {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+/* Painel lateral */
+.painel-lateral {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Painel de Controle */
+.painel-controle {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  margin: 0;
+}
+
+.painel-controle h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: var(--cor-secundaria);
+}
+
+.controles {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.controle-btn {
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+/* Card de Informações */
+.info-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  margin: 0;
+}
+
+.info-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.info-card p {
+  font-size: 0.9rem;
+}
+
+/* Introdução */
+.tour-intro {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tour-intro h1 {
+  color: var(--cor-secundaria);
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.tour-intro p {
+  color: var(--cor-texto);
+  font-size: 1.2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Chamada para Ação */
+.tour-cta {
+  text-align: center;
+  margin-top: 60px;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(255, 84, 0, 0.1), rgba(255, 122, 51, 0.1));
+  border-radius: 20px;
+}
+
+.tour-cta h2 {
+  color: var(--cor-secundaria);
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.tour-cta p {
+  color: var(--cor-texto);
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+.tour-cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.tour-cta-buttons .btn {
+  padding: 15px 30px;
+  font-size: 1.1rem;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 1024px) {
+  .tour-container {
+    grid-template-columns: 1fr 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tour-container {
+    grid-template-columns: 1fr;
+    padding: 15px;
+  }
+
+  .ambiente-simulado {
+    height: 300px;
+  }
+
+  .painel-lateral {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .painel-controle,
+  .info-card {
+    flex: 1;
+    min-width: 250px;
+  }
+
+  .tour-intro h1 {
+    font-size: 2rem;
+  }
+
+  .tour-intro p,
+  .tour-cta p {
+    font-size: 1rem;
+  }
+
+  .tour-cta {
+    padding: 30px 20px;
+  }
+
+  .tour-cta-buttons {
+    flex-direction: column;
+  }
+
+  .tour-cta-buttons .btn {
+    width: 100%;
+  }
+}
+
+/* Animações */
+@keyframes tv-ligada {
+  0% { filter: brightness(1) contrast(1); }
+  50% { filter: brightness(1.2) contrast(1.1); }
+  100% { filter: brightness(1) contrast(1); }
+} 
