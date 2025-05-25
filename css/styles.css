@@ -2005,7 +2005,7 @@ input[data-mask="phone"].invalid {
     transition: all 0.3s ease;
 }
 
-.input-wrapper input:invalid + .error-message {
+.input-wrapper input.invalid + .error-message {
     display: block;
 }
 
