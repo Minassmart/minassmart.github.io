@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="format-detection" content="telephone=no" />
   <meta name="theme-color" content="#ff5400" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: blob:; img-src 'self' https: data: blob:; media-src 'self' https: data: blob:; worker-src 'self' blob:; frame-src 'self' https:;" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Minas Smart - Automação Residencial Inteligente</title>
@@ -35,6 +35,11 @@
   <link rel="preload" href="js/main.js" as="script" />
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" />
   
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css" onerror="this.onerror=null; this.href='css/styles.min.css';" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        onerror="handleFontAwesomeError()" />
+  
   <!-- Fallback para navegadores sem JavaScript -->
   <noscript>
     <style>
@@ -59,16 +64,15 @@
 
   <link rel="icon" href="assets/favicon.ico" type="image/x-icon" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/styles.css" />
   
-  <!-- Fallback para Font Awesome -->
+  <!-- Scripts -->
   <script>
-    function handleFontAwesomeError() {
-      var link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = 'https://use.fontawesome.com/releases/v6.0.0/css/all.min.css';
-      document.head.appendChild(link);
-    }
+    // Verificar se os recursos críticos foram carregados
+    window.addEventListener('error', function(e) {
+      if (e.target.tagName === 'LINK' || e.target.tagName === 'SCRIPT') {
+        console.error('Erro ao carregar recurso:', e.target.src || e.target.href);
+      }
+    }, true);
   </script>
 </head>
 <body>
@@ -559,6 +563,9 @@
     <i class="fab fa-whatsapp"></i>
   </a>
 
-  <script src="js/main.js" defer onerror="console.error('Erro ao carregar o script principal')"></script>
+  <!-- Scripts -->
+  <script src="js/main.js" defer 
+          onerror="console.error('Erro ao carregar o script principal'); 
+                   document.body.innerHTML += '<div class=\'error-message\'>Erro ao carregar recursos. Por favor, recarregue a página.</div>';"></script>
 </body>
 </html>

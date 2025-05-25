@@ -3,22 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1.0">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
   <title>Tour Virtual - Minas Smart</title>
   
-  <!-- Preload de recursos críticos -->
+  <!-- Preload recursos críticos -->
   <link rel="preload" href="css/tour.css" as="style">
-  <link rel="preload" href="js/tour.js" as="script">
+  <link rel="preload" href="js/tour-virtual.js" as="script">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" as="script">
+  <link rel="preload" href="assets/rooms/sala.jpg" as="image">
   
   <!-- Estilos -->
   <link rel="stylesheet" href="css/tour.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   
   <!-- Polyfills para Safari -->
   <script>
@@ -47,14 +52,73 @@
       }
     </style>
   </noscript>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
+    /* Estilos inline críticos */
     body {
       margin: 0;
+      padding: 0;
       font-family: 'Outfit', sans-serif;
-      background-color: #f0f0f0;
       overflow: hidden;
+      background: #000;
+    }
+
+    #tour-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #1a1a1a;
+    }
+
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .loading-content {
+      text-align: center;
+      color: white;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 84, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: #ff5400;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #ff5400;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 1000;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    #back-button:hover {
+      background: #ff6b1a;
+      transform: translateY(-2px);
     }
 
     .temp-feedback {
@@ -122,14 +186,6 @@
 
     .scene-option span {
       font-weight: 500;
-    }
-
-    #tour-container {
-      width: 75vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     #functions-panel {
@@ -303,27 +359,6 @@
       border-radius: 8px;
       text-align: center;
       z-index: 1000;
-    }
-
-    #back-button {
-      position: fixed;
-      top: 20px;
-      right: calc(25vw + 20px);
-      background: #ff5400;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 24px;
-      cursor: pointer;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-
-    #back-button:hover {
-      background: #ff7a33;
-      transform: translateY(-2px);
     }
 
     .contact-overlay {
@@ -595,8 +630,7 @@
     </div>
   </div>
 
-  <div id="tour-container">
-  </div>
+  <div id="tour-container"></div>
   <div id="functions-panel">
     <div class="function-group">
       <h3>Iluminação</h3>
@@ -710,18 +744,13 @@
   <div id="instructions">Clique nos pontos interativos para mais informações</div>
   <button id="back-button" onclick="window.location.href='index.html'">Voltar ao Site</button>
 
-  <script src="js/tour-virtual.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      initTour();
-    });
-  </script>
-
-  <!-- Mensagem de fallback para JavaScript desativado -->
-  <div class="fallback-message" style="display: none;">
-    <h2>JavaScript Necessário</h2>
-    <p>Por favor, ative o JavaScript para visualizar o tour virtual.</p>
-    <a href="index.html" class="btn">Voltar ao Site</a>
+  <div class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p>Carregando tour virtual...</p>
+    </div>
   </div>
+
+  <script defer src="js/tour-virtual.js"></script>
 </body>
 </html> 

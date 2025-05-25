@@ -1,13 +1,18 @@
-/* Estilos base */
+/* Variáveis */
 :root {
   --primary-color: #ff5400;
   --primary-hover: #ff6b1a;
   --text-color: #333;
-  --bg-color: #f8f9fa;
+  --bg-color: #1a1a1a;
   --card-bg: rgba(255, 255, 255, 0.9);
   --overlay-bg: rgba(0, 0, 0, 0.8);
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
+}
+
+/* Estilos base */
+html {
+  height: -webkit-fill-available;
 }
 
 body {
@@ -19,16 +24,20 @@ body {
   overflow: hidden;
   position: fixed;
   width: 100%;
-  height: 100%;
-  background: #000;
+  height: 100vh;
+  height: -webkit-fill-available;
+  background: var(--bg-color);
+  color: white;
 }
 
-.tour-container {
+#tour-container {
   position: relative;
-  width: 100%;
-  height: calc(100vh - 60px);
-  background: var(--bg-color);
+  width: 100vw;
+  height: 100vh;
+  height: -webkit-fill-available;
   overflow: hidden;
+  background: var(--bg-color);
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Overlay de introdução */
@@ -706,22 +715,28 @@ noscript .tour-error {
 }
 
 /* Botão Voltar */
-.back-button {
+#back-button {
   position: fixed;
-  top: env(safe-area-inset-top, 20px);
-  left: env(safe-area-inset-left, 20px);
-  background: #ff5400;
+  top: max(env(safe-area-inset-top), 20px);
+  left: max(env(safe-area-inset-left), 20px);
+  background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 8px;
   padding: 12px 24px;
+  border-radius: 8px;
   font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
   z-index: 1000;
+  font-weight: 600;
+  transition: var(--transition);
   -webkit-appearance: none;
   appearance: none;
   touch-action: manipulation;
+}
+
+#back-button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
 }
 
 /* Pontos interativos */
@@ -759,18 +774,19 @@ noscript .tour-error {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--overlay-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .loading-content {
   text-align: center;
   color: white;
+  padding: 20px;
 }
 
 .loading-spinner {
@@ -778,8 +794,9 @@ noscript .tour-error {
   height: 50px;
   border: 4px solid rgba(255, 84, 0, 0.3);
   border-radius: 50%;
-  border-top-color: #ff5400;
+  border-top-color: var(--primary-color);
   animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
 }
 
 /* Animações */
@@ -795,9 +812,7 @@ noscript .tour-error {
 }
 
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 /* Ajustes para Safari iOS */
@@ -819,48 +834,19 @@ noscript .tour-error {
     overflow: hidden;
   }
 
-  .controls {
-    bottom: max(env(safe-area-inset-bottom), 20px);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .control-btn {
+  #back-button {
     padding: 15px 25px;
     min-height: 44px;
     -webkit-appearance: none;
     appearance: none;
     touch-action: manipulation;
   }
-
-  .back-button {
-    top: max(env(safe-area-inset-top), 20px);
-    padding-top: env(safe-area-inset-top);
-    min-height: 44px;
-  }
-
-  #functions-panel {
-    padding-bottom: env(safe-area-inset-bottom);
-    max-height: calc(80vh - env(safe-area-inset-bottom));
-  }
-
-  .command-panel {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }
 
 /* Ajustes específicos para iPhone 11 */
 @media screen and (device-width: 414px) and (device-height: 896px) {
   #tour-container {
-    height: calc(100vh - 70px) !important;
-  }
-
-  .command-panel {
-    height: auto;
-    max-height: 40vh;
-  }
-
-  .control-panel {
-    bottom: calc(40vh + env(safe-area-inset-bottom));
+    height: 100vh !important;
   }
 }
 
@@ -876,7 +862,7 @@ noscript .tour-error {
     font-size: 14px;
   }
 
-  .back-button {
+  #back-button {
     padding: 10px 20px;
     font-size: 14px;
   }
@@ -890,11 +876,8 @@ noscript .tour-error {
 
 /* Orientação paisagem em dispositivos móveis */
 @media (max-height: 480px) and (orientation: landscape) {
-  .controls {
-    flex-direction: column;
-    right: env(safe-area-inset-right, 20px);
-    left: auto;
-    bottom: 50%;
-    transform: translateY(50%);
+  #back-button {
+    top: 10px;
+    left: 10px;
   }
 } 

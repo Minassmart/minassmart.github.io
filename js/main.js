@@ -209,6 +209,44 @@ document.addEventListener('DOMContentLoaded', function() {
       closeBtn.addEventListener('click', hideCta);
     }
   }
+
+  // Inicializar funcionalidades
+  initializeMenu();
+  initializeSections();
+  initializeContactForm();
+  
+  // Verificar se os elementos principais existem
+  const mainContent = document.querySelector('main');
+  const header = document.querySelector('header');
+  const footer = document.querySelector('footer');
+
+  if (!mainContent || !header || !footer) {
+    console.error('Elementos principais não encontrados');
+    showError('Erro ao carregar a página. Por favor, recarregue.');
+    return;
+  }
+
+  // Verificar se as imagens foram carregadas
+  const images = document.querySelectorAll('img');
+  let loadedImages = 0;
+
+  images.forEach(img => {
+    if (img.complete) {
+      loadedImages++;
+    } else {
+      img.addEventListener('load', () => {
+        loadedImages++;
+        if (loadedImages === images.length) {
+          console.log('Todas as imagens carregadas');
+        }
+      });
+
+      img.addEventListener('error', () => {
+        console.error('Erro ao carregar imagem:', img.src);
+        img.src = 'assets/placeholder.png';
+      });
+    }
+  });
 });
 
 // Menu mobile
@@ -424,4 +462,88 @@ function checkCookieConsent() {
   // Fallback para cookies
   const match = document.cookie.match(/cookieConsent=([^;]+)/);
   return match ? match[1] : null;
+}
+
+// Função para inicializar o menu
+function initializeMenu() {
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navMenu = document.querySelector('nav');
+
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => toggleMenu(menuToggle, navMenu));
+    
+    // Fechar menu ao clicar em links
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.setAttribute('aria-expanded', 'false');
+        navMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+}
+
+// Função para alternar o menu
+function toggleMenu(menuToggle, navMenu) {
+  const isExpanded = menuToggle.getAttribute('aria-expanded') === 'true';
+  menuToggle.setAttribute('aria-expanded', !isExpanded);
+  navMenu.classList.toggle('open');
+  document.body.style.overflow = isExpanded ? '' : 'hidden';
+}
+
+// Função para inicializar as seções
+function initializeSections() {
+  // Configurar animações de fade
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-section').forEach(section => {
+      observer.observe(section);
+    });
+  }
+}
+
+// Função para inicializar o formulário de contato
+function initializeContactForm() {
+  const form = document.querySelector('form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Validar CSRF token
+    const formToken = form.querySelector('input[name="_csrf"]').value;
+    if (!validateCSRFToken(formToken)) {
+      console.error('Token CSRF inválido');
+      return;
+    }
+
+    // Validar honeypot
+    const honeypot = form.querySelector('input[name="_honey"]');
+    if (honeypot && honeypot.value) {
+      console.error('Possível submissão automatizada detectada');
+      return;
+    }
+
+    // Sanitizar inputs
+    const inputs = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], textarea');
+    inputs.forEach(input => {
+      input.value = sanitizeInput(input.value);
+    });
+
+    // Submeter formulário
+    form.submit();
+  });
 } 

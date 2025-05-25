@@ -1,4 +1,207 @@
 // Configuração inicial
+let scene, camera, renderer, controls;
+const loadingManager = new THREE.LoadingManager();
+const textureLoader = new THREE.TextureLoader(loadingManager);
+
+// Configurar gerenciador de carregamento
+loadingManager.onProgress = function(url, itemsLoaded, itemsTotal) {
+    const progress = (itemsLoaded / itemsTotal * 100).toFixed(0);
+    const loadingText = document.querySelector('.loading-content p');
+    if (loadingText) {
+        loadingText.textContent = `Carregando tour virtual... ${progress}%`;
+    }
+};
+
+loadingManager.onLoad = function() {
+    const loadingScreen = document.querySelector('.loading-screen');
+    if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+        }, 500);
+    }
+};
+
+// Inicializar cena
+function init() {
+    // Configurar cena
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a1a);
+
+    // Configurar câmera
+    const container = document.getElementById('tour-container');
+    camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 1.6, 3);
+
+    // Configurar renderer com otimizações
+    renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        powerPreference: "high-performance",
+        alpha: true,
+        stencil: false,
+        depth: true
+    });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    // Configurar controles
+    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.rotateSpeed = 0.5;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+
+    // Carregar sala inicial
+    loadRoom('sala');
+
+    // Configurar redimensionamento
+    window.addEventListener('resize', onWindowResize, false);
+
+    // Iniciar animação
+    animate();
+}
+
+// Carregar ambiente
+function loadRoom(roomName) {
+    // Limpar cena atual
+    while(scene.children.length > 0) { 
+        scene.remove(scene.children[0]); 
+    }
+
+    // Criar geometria esférica otimizada
+    const geometry = new THREE.SphereGeometry(500, 60, 40);
+    geometry.scale(-1, 1, 1);
+
+    // Carregar textura com cache
+    textureLoader.load(
+        `assets/rooms/${roomName}.jpg`,
+        (texture) => {
+            texture.encoding = THREE.sRGBEncoding;
+            const material = new THREE.MeshBasicMaterial({
+                map: texture,
+                side: THREE.DoubleSide
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            scene.add(sphere);
+        },
+        undefined,
+        (error) => {
+            console.error('Erro ao carregar textura:', error);
+            // Carregar textura de fallback
+            const fallbackMaterial = new THREE.MeshBasicMaterial({ color: 0x808080 });
+            const sphere = new THREE.Mesh(geometry, fallbackMaterial);
+            scene.add(sphere);
+        }
+    );
+}
+
+// Otimizar redimensionamento
+function onWindowResize() {
+    const container = document.getElementById('tour-container');
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+}
+
+// Otimizar loop de animação
+function animate() {
+    requestAnimationFrame(animate);
+    if (controls) controls.update();
+    if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+    }
+}
+
+// Inicializar quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', init);
+
+// Configuração inicial
+document.addEventListener('DOMContentLoaded', function() {
+    // Garantir que o container existe
+    const container = document.getElementById('tour-container');
+    if (!container) {
+        console.error('Container do tour virtual não encontrado');
+        return;
+    }
+
+    // Configuração da cena
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a1a);
+
+    // Configuração da câmera
+    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+    camera.position.set(0, 1.6, 3);
+
+    // Configuração do renderizador
+    const renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance"
+    });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Configuração dos controles
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.rotateSpeed = 0.5;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+
+    // Carregar textura temporária
+    const textureLoader = new THREE.TextureLoader();
+    const tempTexture = new THREE.MeshBasicMaterial({ color: 0x808080 });
+    
+    // Criar geometria esférica para o ambiente
+    const geometry = new THREE.SphereGeometry(500, 60, 40);
+    geometry.scale(-1, 1, 1);
+    const sphere = new THREE.Mesh(geometry, tempTexture);
+    scene.add(sphere);
+
+    // Função de animação
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    // Iniciar animação
+    animate();
+
+    // Ajustar tamanho ao redimensionar
+    window.addEventListener('resize', function() {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    // Adicionar mensagem temporária
+    const message = document.createElement('div');
+    message.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 84, 0, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        z-index: 1000;
+        font-family: 'Outfit', sans-serif;
+    `;
+    message.innerHTML = `
+        <h3 style="margin: 0 0 10px 0;">Ambiente em Construção</h3>
+        <p style="margin: 0;">O tour virtual está sendo preparado para melhor experiência.</p>
+    `;
+    document.body.appendChild(message);
+});
+
+// Configuração inicial
 const container = document.getElementById('tour-container') || document.createElement('div');
 if (!container.id) {
     container.id = 'tour-container';
