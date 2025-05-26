@@ -202,7 +202,7 @@ nav.open a {
 .hero {
   text-align: center;
   padding: 160px 20px 120px;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("../assets/moça-sofa2.png");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../assets/Minas Gerais-FotoPrincipal-melhor.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -241,48 +241,47 @@ nav.open a {
   margin-top: 20px;
 }
 
-.btn {
-  background-color: var(--color-highlight);
+.hero-buttons .btn {
+  min-width: 200px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 15px 30px;
+}
+
+.hero-buttons .btn-outline {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--color-highlight);
   color: #fff;
-  padding: 12px 24px;
-  border: none;
-  font-weight: 500;
-  font-size: var(--font-size-base);
-  border-radius: var(--btn-radius);
-  cursor: pointer;
-  text-transform: none;
-  transition: all var(--transition-time) ease;
-  box-shadow: none;
-  letter-spacing: 0.25px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 48px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(255, 84, 0, 0.2);
 }
 
-.btn:hover,
-.btn:focus {
-  background-color: var(--color-highlight-light);
-  transform: translateY(0);
-  box-shadow: var(--box-shadow);
+.hero-buttons .btn-outline:hover {
+  background: var(--color-highlight);
+  border-color: var(--color-highlight);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 84, 0, 0.3);
 }
 
-.btn-outline {
-  background: transparent;
-  border: 1px solid var(--color-highlight);
-  color: var(--color-highlight);
-}
+@media (max-width: 768px) {
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
 
-.btn-outline:hover {
-  background: rgba(255, 84, 0, 0.04);
-  border-color: var(--color-highlight-light);
-  color: var(--color-highlight-light);
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }
 
 /* Seções */
 .full-section {
   width: 100%;
-  padding: 100px 40px;
+  padding: 4rem 0;
   position: relative;
   z-index: 3;
   background-color: var(--color-dark-bg);
@@ -387,32 +386,28 @@ nav.open a {
 /* Services Grid */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 40px;
-  margin-top: 40px;
-  padding: 0 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 0;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .service-card {
-  background: var(--color-bg);
-  border-radius: 28px;
+  background: var(--color-white);
+  border-radius: 15px;
   overflow: hidden;
-  transition: all var(--transition-time) ease;
-  box-shadow: var(--box-shadow);
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--color-dark-bg-alt);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
 .service-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 8px rgba(255, 84, 0, 0.2);
+  transform: translateY(-5px);
 }
 
 .service-image {
   width: 100%;
-  height: 300px;
+  height: 250px;
   overflow: hidden;
   position: relative;
 }
@@ -421,59 +416,44 @@ nav.open a {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-time) ease;
+  transition: transform 0.5s ease;
+}
+
+.service-card:hover .service-image img {
+  transform: scale(1.1);
 }
 
 .service-content {
-  padding: 32px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg);
+  padding: 1.5rem;
 }
 
 .service-content h3 {
-  color: var(--color-secondary);
-  font-size: var(--font-size-xl);
-  margin-bottom: 16px;
-  font-weight: 500;
-  letter-spacing: -0.5px;
-}
-
-.service-content h3::after {
-  display: none;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
 }
 
 .service-content p {
+  margin-bottom: 1rem;
   color: var(--color-text);
-  margin-bottom: 24px;
-  line-height: 1.6;
-  font-size: var(--font-size-base);
 }
 
 .service-content ul {
   list-style: none;
   padding: 0;
-  margin: 0;
-  flex-grow: 1;
 }
 
 .service-content li {
-  padding: 8px 0;
-  color: var(--color-text);
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
   position: relative;
-  padding-left: 28px;
-  display: flex;
-  align-items: center;
-  font-size: var(--font-size-base);
 }
 
 .service-content li:before {
-  content: '✓';
-  color: var(--color-highlight);
+  content: "•";
+  color: var(--color-primary);
   position: absolute;
   left: 0;
-  font-weight: 500;
 }
 
 /* Planos */
@@ -582,7 +562,7 @@ nav.open a {
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   padding: 10px;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -595,13 +575,14 @@ nav.open a {
 .feature-item i {
   color: var(--color-highlight);
   font-size: 20px;
-  width: 24px;
+  min-width: 24px;
   text-align: center;
 }
 
 .feature-item span {
   color: var(--color-text);
   font-size: var(--font-size-base);
+  flex: 1;
 }
 
 .plan .btn {
@@ -712,11 +693,12 @@ nav.open a {
 .contact-container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 50px;
-  align-items: start;
-  max-width: var(--max-width);
+  gap: 3rem;
+  background: var(--color-bg-alt);
+  border-radius: 15px;
+  overflow: hidden;
   margin: 0 auto;
-  padding: 40px;
+  max-width: 1200px;
 }
 
 .contact-info {
@@ -1073,13 +1055,17 @@ footer {
 
   .services-grid {
     grid-template-columns: 1fr;
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 0 15px;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .service-card {
+    max-width: 100%;
+    margin: 0 1rem;
   }
 
   .service-image {
-    height: 250px;
+    height: 200px;
   }
 
   .service-content {
@@ -2037,4 +2023,87 @@ input[data-mask="phone"].invalid {
         color: #000;
         text-decoration: underline;
     }
+}
+
+.btn {
+  background-color: var(--color-highlight);
+  color: #fff;
+  padding: 12px 24px;
+  border: none;
+  font-weight: 500;
+  font-size: var(--font-size-base);
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  text-transform: none;
+  transition: all var(--transition-time) ease;
+  box-shadow: none;
+  letter-spacing: 0.25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.btn:hover,
+.btn:focus {
+  background-color: var(--color-highlight-light);
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--color-highlight);
+  color: var(--color-highlight);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 84, 0, 0.04);
+  border-color: var(--color-highlight-light);
+  color: var(--color-highlight-light);
+}
+
+/* Estilos específicos para os botões do hero */
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.hero-buttons .btn {
+  min-width: 200px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 15px 30px;
+}
+
+.hero-buttons .btn-outline {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid var(--color-highlight);
+  color: #fff;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 15px rgba(255, 84, 0, 0.2);
+}
+
+.hero-buttons .btn-outline:hover {
+  background: var(--color-highlight);
+  border-color: var(--color-highlight);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 84, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: 300px;
+  }
 }
